@@ -1,0 +1,2243 @@
+[
+    {
+        "title": {
+            "font_name": "Arial-BoldMT",
+            "font_size": 14.039999999999964,
+            "boldness": true,
+            "text": "1.1 Web Service"
+        },
+        "subtopic": [],
+        "content": [
+            {
+                "font_name": "TimesNewRomanPSMT",
+                "font_size": 12.0,
+                "boldness": false,
+                "text": "The base URL for the web service is located at https://integration.protractor.com/IntegrationServices/1.0/The documentation then lists all the API using only relative URL. So if an API call to retrieveService Categories be listed as \u201c/ServiceCategory\u201d, the actual URL to perform the call will be: https://integration.protractor.com/IntegrationServices/1.0/ServiceCategoryThe integration web service allows the caller to make the web service call as a RESTful web service.The REST web service can be access through standard HTTP operation. Some of the parameters might be passed as part of the URL or as URL query parameters. Any data object that needs to be passed to the web service will be passed in the request body. Any data object that will be returned will be returned in the reply body.The RESTful web service supports both XML and JSON. The default input / output format isXML. any data object passed into the web service should be the data object serialized in XML and any data object being returned is the data object serialized in XML.To change the input / output format to JSON, add an HTTP header of Accept: application/json.Alternatively, you can also pass in a query parameter of \u201cformat=json\u201d to change the input / output format to JSON.Please note that XML web service through SOAP and WSDL are now deprecated, and will be kept for backward compatibility purpose only. New APIs will be added as RESTful web service only and will not have XML web service implementation."
+            }
+        ]
+    },
+    {
+        "title": {
+            "font_name": "Arial-BoldMT",
+            "font_size": 14.039999999999964,
+            "boldness": true,
+            "text": "1.2 Authentication Parameters"
+        },
+        "subtopic": [],
+        "content": [
+            {
+                "font_name": "TimesNewRomanPSMT",
+                "font_size": 12.0,
+                "boldness": false,
+                "text": "The following is a list of parameters used for authentication that is required for every API. The method of passing these parameters depend on the format of the API you choose to call. But the parameters names and parameter values are the same."
+            },
+            {
+                "font_name": "TimesNewRomanPS-BoldMT",
+                "font_size": 12.0,
+                "boldness": true,
+                "text": "Name Parameter Description"
+            },
+            {
+                "font_name": "TimesNewRomanPSMT",
+                "font_size": 12.0,
+                "boldness": false,
+                "text": "Connection ID connectionId Type GUID. Provided by the shop userAPI Key apiKey Type GUID. Provided by the shop user.Authentication authentication Type String. Calculated by the caller based on the algorithm specified by Protractor.The connectionId, apiKey, authentication values will be supplied to you by the end user and it is unique for every shop location. The authentication parameter is a string and it can be calculated by the caller or the caller can choose to save this value as a parameter together with connection ID and API key. The authentication is a base64 string of a HMAC SHA1 hash.This is computed by using the binary of API Key in in ################################ format in all lower case and UTF8 encoding as the key and compute HMAC SHA1 hash on the binary of Connection ID in ################################ format in all lower case and UTF8 encoding. The result binary hash is then base64 encoded and the text result is what should be passed as the authentication parameter.In C# the code to calculate the authentication may look like:"
+            },
+            {
+                "font_name": "CourierNewPSMT",
+                "font_size": 9.0,
+                "boldness": false,
+                "text": "HMACSHA1 hmac = new HMACSHA1(UTF8Encoding.UTF8.GetBytes(apiKey.ToString(\"N\").ToLower())); string authentication =Convert.ToBase64String( hmac.ComputeHash(UTF8Encoding.UTF8.GetBytes(connectionId.ToString(\"N\").ToLower())));"
+            },
+            {
+                "font_name": "TimesNewRomanPSMT",
+                "font_size": 12.0,
+                "boldness": false,
+                "text": "As an example, the following credentials:"
+            },
+            {
+                "font_name": "CourierNewPSMT",
+                "font_size": 9.95999999999998,
+                "boldness": false,
+                "text": "Connection ID: 5fecbc200f0e4a7cbf41040e11047e56"
+            },
+            {
+                "font_name": "CourierNewPSMT",
+                "font_size": 9.960000000000008,
+                "boldness": false,
+                "text": "API Key: 2de51c4fd0f04b9fabeb95225e87da70"
+            },
+            {
+                "font_name": "TimesNewRomanPSMT",
+                "font_size": 12.0,
+                "boldness": false,
+                "text": "Should result in a computed authentication value of m5/Vc1RzhUETQvEtx/JdIglQpTg=We recommend passed these parameters as header values. A sample request header will have the following headers:"
+            },
+            {
+                "font_name": "CourierNewPSMT",
+                "font_size": 9.960000000000036,
+                "boldness": false,
+                "text": "connectionId: 5fecbc200f0e4a7cbf41040e11047e56 apiKey: 2de51c4fd0f04b9fabeb95225e87da70 authentication: m5/Vc1RzhUETQvEtx/JdIglQpTg="
+            },
+            {
+                "font_name": "TimesNewRomanPSMT",
+                "font_size": 12.0,
+                "boldness": false,
+                "text": "If for some technical reason you cannot pass these parameter values in the header, you can also pass these parameters as query parameters. For example, a sample request will have the following query parameters and possibility more."
+            },
+            {
+                "font_name": "CourierNewPSMT",
+                "font_size": 10.559999999999945,
+                "boldness": false,
+                "text": "?connectionId=5fecbc200f0e4a7cbf41040e11047e56&apiKey=2de51c4fd0f04b9fa beb95225e87da70&authentication=m5%2FVc1RzhUETQvEtx%2FJdIglQpTg%3D"
+            },
+            {
+                "font_name": "TimesNewRomanPSMT",
+                "font_size": 12.0,
+                "boldness": false,
+                "text": "Keep in mind that all parameter values that\u2019s passed as query parameter needs to be properlyURL encoded."
+            }
+        ]
+    },
+    {
+        "title": {
+            "font_name": "Arial-BoldMT",
+            "font_size": 14.039999999999964,
+            "boldness": true,
+            "text": "1.3 Date / Time Format"
+        },
+        "subtopic": [],
+        "content": [
+            {
+                "font_name": "TimesNewRomanPSMT",
+                "font_size": 12.0,
+                "boldness": false,
+                "text": "All date parameters without time zone information specified are automatically considered to be in the Eastern Standard Time. So a value of 2015-01-01 is interpreted as 2015-01-01 12AMEST. A value of 2015-01-01T09:00:00 is interpreted as 2015-01-01 9AM EST. Please refer toISO 8601 date format on how to include time zone information.The following values are all equivalent to 2015-01-01 9AM EST:2015-01-01T09:00:00 No time zone specified. The value is automatically treated as Eastern Standard Time. Result time is 2015-01-01 9AMEST.2015-01-01T09:00:00-05:00 Time zone specified as UTC-5. The time is interpreted as inEST. Result time is 2015-01-01 9AM EST.2015-01-01T08:00:00-06:00 Time zone specified as UTC-6. The time is interpreted as inCST. 2015-01-01 8AM CST is equivalent to 2015-01-019AM EST.2015-01-01T14:00:00Z Time zone specified as UTC. The time is interpreted asCoordinated Universal Time. 2015-01-01 2PM UTC is equivalent to 2015-01-01 9AM EST.All date / time returned by the web service interface are also formatted in ISO 8601 with time zone information specified. The date / time will be specified in EST. It is up to the caller to using a standard library to interpret the ISO 8601 date / time to the proper time zone the user is located in. So an appointment scheduled at 2015-01-01 8AM CST will be returned as 2015-01-01T09:00:00-05:00. 2015-01-01 9AM EST is equivalent of 2015-01-01 8AM CST. Any standard library that understands ISO 8601 date / time format can do the proper translation to the correct local time.The web service interface will not be performing any date / time translation to interpret a date/ time value without time zone information as a different time zone. The web service interface will also not be performing any date / time translation to return the date / time value equivalence of a different time zone."
+            }
+        ]
+    },
+    {
+        "title": {
+            "font_name": "Arial-BoldMT",
+            "font_size": 14.039999999999964,
+            "boldness": true,
+            "text": "1.4 Deletion"
+        },
+        "subtopic": [],
+        "content": [
+            {
+                "font_name": "TimesNewRomanPSMT",
+                "font_size": 12.0,
+                "boldness": false,
+                "text": "In Protractor there\u2019s no notion of a Delete operation. To mark an object as deleted, you populate the DeletionTime in the object\u2019s Header property with a valid time stamp and then make anUpdate call. Protractor treat any object with a valid DeletionTime as deleted. TheDeletionTime should be a time stamp representing when the object is deleted. So typically, it should be populated with the current time for a simple delete operation.A normal, not deleted object returned by the system will always have DeletionTime of 0001-01-01T00:00:00. A deleted object will have DeletionTime populated with a valid time stamp."
+            }
+        ]
+    },
+    {
+        "title": {
+            "font_name": "Arial-BoldMT",
+            "font_size": 14.039999999999964,
+            "boldness": true,
+            "text": "1.5 Object ID"
+        },
+        "subtopic": [],
+        "content": [
+            {
+                "font_name": "TimesNewRomanPSMT",
+                "font_size": 12.0,
+                "boldness": false,
+                "text": "Any objects that contains a ID property is identified uniquely by that ID. The ID is aGUID/UUID and you can generate that using existing GUID/UUID generator supported by your platform. Any modern platform should support the generation of version 4 or version 1UUID.In Protractor, there\u2019s no notion of an Add operation. If you update an object that has an ID that does not exist in the system, then that\u2019s an Add operation. If you update an object that has anID that already exists in the system, then it is an update operation.Integrator must make sure that whenever an object that has an ID property is passed to the web service, the ID is populated with the correct object ID. If the object is referencing a new object, then the ID must be populate with a newly generated GUID/UUID. If the object is referencing an existing object in Protractor, then the ID must be populated with the appropriate ID as inProtractor.If an object is saved in the integrator\u2019s system, then the ID should be saved with the object so that when you want to make calls on that object in the future, you have the corresponding ID to us.If there\u2019s any child object that has an ID property, they must all be populated with the appropriate ID as in Protractor as well. If the integrator does not have the correct ID in their system, then the integrator should always make a read call using the parent object ID first. This way you get all the child objects populated with all their IDs, then make changes to the object values to reflect the changes you want to make, and then pass the entire object back toProtractor. This is so that your call doesn\u2019t make unintended modification to references by passing a deleted or none existing child object ID into the system."
+            }
+        ]
+    },
+    {
+        "title": {
+            "font_name": "Arial-BoldMT",
+            "font_size": 14.039999999999964,
+            "boldness": true,
+            "text": "1.6 Change Notification"
+        },
+        "subtopic": [],
+        "content": [
+            {
+                "font_name": "TimesNewRomanPSMT",
+                "font_size": 12.0,
+                "boldness": false,
+                "text": "In order to minimize unnecessary polling for most up to date data. We have implemented a callback mechanism. You as an integrator need to implement a simple web service that allow us to make calls to notify you after data has changed. The notification call will not include the actual detail of the data record, but upon receiving that notification call, you can then make appropriate API calls to retrieve the latest information. This way, the integrator can synchronize your data with our data with minimum traffic between the two system.The Callback is configured in our client. The user simply need to add a CallbackURL parameter into the integrated services settings and enter the URL of your callback handling service.Once the callback URL is setup, when supported objects has changed, we will make calls to the callback URL while passing a number of query parameters to your web service. The following query parameters will be passed to you. We might include additional parameters that\u2019s not listed in this table in the future.connectionId Type GUID. Provided by the shop user apiKey Type GUID. Provided by the shop user type Type string. The object type.id Type GUID. The object ID.operation Type string. The action that occurred.Supported object types today are: Contact, ServiceItem, WorkOrder.Operation that will be sent today are: Update, Delete, Invoiced.Update is set when an object is created or updated.Invoiced is only sent when a work order is posted as an invoice.A sample callback after a contact has been updated might look like:"
+            },
+            {
+                "font_name": "CourierNewPSMT",
+                "font_size": 9.95999999999998,
+                "boldness": false,
+                "text": "https://your_callback_url?connectionId=5fecbc200f0e4a7cbf41040e11047e56&ap iKey=2de51c4fd0f04b9fabeb95225e87da70&type=Contact&id=3DC13A80-6EB1-4D3D-B784-1B42BE325B7E&operation=Update"
+            }
+        ]
+    },
+    {
+        "title": {
+            "font_name": "Arial-BoldMT",
+            "font_size": 14.039999999999964,
+            "boldness": true,
+            "text": "1.7 Setup Services"
+        },
+        "subtopic": [
+            {
+                "title": {
+                    "font_name": "Arial-BoldMT",
+                    "font_size": 12.0,
+                    "boldness": true,
+                    "text": "1.7.1 Generate GUIDs"
+                },
+                "content": [
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 12.0,
+                        "boldness": false,
+                        "text": "This call generates a list of GUIDs that can be used as object IDs when passing new objects into the system. This should not be necessary for most integrator as any modern platform will have some form for support for version 4 or version 1 UUID generation. If your platform does not have a proper version 4 or version 1 UUID generator then you can use this call to get 1 or multiple GUIDs."
+                    },
+                    {
+                        "font_name": "TimesNewRomanPS-BoldMT",
+                        "font_size": 12.0,
+                        "boldness": true,
+                        "text": "REST"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 12.0,
+                        "boldness": false,
+                        "text": "URL: /ID/NewMethod: Get"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPS-BoldMT",
+                        "font_size": 12.0,
+                        "boldness": true,
+                        "text": "Parameters"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 12.0,
+                        "boldness": false,
+                        "text": "count Type integer. Specify the number of GUIDs to generate."
+                    },
+                    {
+                        "font_name": "TimesNewRomanPS-BoldMT",
+                        "font_size": 12.0,
+                        "boldness": true,
+                        "text": "Result"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 12.0,
+                        "boldness": false,
+                        "text": "A list of GUIDs."
+                    }
+                ]
+            },
+            {
+                "title": {
+                    "font_name": "Arial-BoldMT",
+                    "font_size": 12.0,
+                    "boldness": true,
+                    "text": "1.7.2 Read Locations"
+                },
+                "content": [
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 12.0,
+                        "boldness": false,
+                        "text": "This call returns a list of locations. For connection against a location database, this will return only one location. For connection against an enterprise database, this will return all locations within the enterprise."
+                    },
+                    {
+                        "font_name": "TimesNewRomanPS-BoldMT",
+                        "font_size": 12.0,
+                        "boldness": true,
+                        "text": "REST"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 12.0,
+                        "boldness": false,
+                        "text": "URL: /Location/Method: Get"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPS-BoldMT",
+                        "font_size": 12.0,
+                        "boldness": true,
+                        "text": "XML Web Service"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 12.0,
+                        "boldness": false,
+                        "text": "WSDL: /SetupServices.asmx?WSDLURL: /SetupServices.asmx"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 11.999999999999943,
+                        "boldness": false,
+                        "text": "Method: LocationsRead"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPS-BoldMT",
+                        "font_size": 12.0,
+                        "boldness": true,
+                        "text": "Parameters"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 12.0,
+                        "boldness": false,
+                        "text": "None"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPS-BoldMT",
+                        "font_size": 12.0,
+                        "boldness": true,
+                        "text": "Result"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 12.0,
+                        "boldness": false,
+                        "text": "A Locations object."
+                    }
+                ]
+            },
+            {
+                "title": {
+                    "font_name": "Arial-BoldMT",
+                    "font_size": 12.0,
+                    "boldness": true,
+                    "text": "1.7.3 Read Service Categories"
+                },
+                "content": [
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 12.0,
+                        "boldness": false,
+                        "text": "This call returns a list of profit centers and service categories configured on the system."
+                    },
+                    {
+                        "font_name": "TimesNewRomanPS-BoldMT",
+                        "font_size": 12.0,
+                        "boldness": true,
+                        "text": "REST"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 12.0,
+                        "boldness": false,
+                        "text": "URL: /ServiceCategory/Method: Get"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPS-BoldMT",
+                        "font_size": 12.0,
+                        "boldness": true,
+                        "text": "XML Web Service"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 12.0,
+                        "boldness": false,
+                        "text": "WSDL: /SetupServices.asmx?WSDLURL: /SetupServices.asmxMethod: ServiceCategoriesRead"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPS-BoldMT",
+                        "font_size": 11.999999999999943,
+                        "boldness": true,
+                        "text": "Parameters"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 12.0,
+                        "boldness": false,
+                        "text": "readDeleted Type boolean. Specify if deleted service categories should be returned."
+                    },
+                    {
+                        "font_name": "TimesNewRomanPS-BoldMT",
+                        "font_size": 12.0,
+                        "boldness": true,
+                        "text": "Result"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 12.0,
+                        "boldness": false,
+                        "text": "A ServiceCategories object.The first level service categories represents the Profit Centers defined in Protractor. The child categories represents the Service Categories defined in Protractor."
+                    }
+                ]
+            },
+            {
+                "title": {
+                    "font_name": "Arial-BoldMT",
+                    "font_size": 12.0,
+                    "boldness": true,
+                    "text": "1.7.1 Read Labor Rate"
+                },
+                "content": [
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 12.0,
+                        "boldness": false,
+                        "text": "This call returns a list of labor rates."
+                    },
+                    {
+                        "font_name": "TimesNewRomanPS-BoldMT",
+                        "font_size": 12.0,
+                        "boldness": true,
+                        "text": "REST"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 12.0,
+                        "boldness": false,
+                        "text": "URL: /Setup/LaborRateMethod: Get"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPS-BoldMT",
+                        "font_size": 12.0,
+                        "boldness": true,
+                        "text": "Parameters"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 12.0,
+                        "boldness": false,
+                        "text": "None"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPS-BoldMT",
+                        "font_size": 12.0,
+                        "boldness": true,
+                        "text": "Result"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 12.0,
+                        "boldness": false,
+                        "text": "A LaborRates object."
+                    }
+                ]
+            },
+            {
+                "title": {
+                    "font_name": "Arial-BoldMT",
+                    "font_size": 12.0,
+                    "boldness": true,
+                    "text": "1.7.2 Read Employees"
+                },
+                "content": [
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 12.0,
+                        "boldness": false,
+                        "text": "This call returns a list of service advisors, technician or both."
+                    },
+                    {
+                        "font_name": "TimesNewRomanPS-BoldMT",
+                        "font_size": 12.0,
+                        "boldness": true,
+                        "text": "REST"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 12.0,
+                        "boldness": false,
+                        "text": "URL: /Employee/{type}Method: Get"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPS-BoldMT",
+                        "font_size": 12.0,
+                        "boldness": true,
+                        "text": "XML Web Service"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 12.0,
+                        "boldness": false,
+                        "text": "WSDL: /SetupServices.asmx?WSDLURL: /SetupServices.asmxMethod: EmployeesRead"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPS-BoldMT",
+                        "font_size": 11.999999999999943,
+                        "boldness": true,
+                        "text": "Parameters"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 12.0,
+                        "boldness": false,
+                        "text": "type Type string. Specify the employee type. The accepted values are \u201cAll\u201d, \u201cServiceAdvisor\u201d, and \u201cTechnician\u201d"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPS-BoldMT",
+                        "font_size": 12.0,
+                        "boldness": true,
+                        "text": "Result"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 12.0,
+                        "boldness": false,
+                        "text": "An Employees object.A service advisor can be at the same time a technician in Protractor system. And so the ID in the employee collection may contain duplicated IDs."
+                    }
+                ]
+            },
+            {
+                "title": {
+                    "font_name": "Arial-BoldMT",
+                    "font_size": 12.0,
+                    "boldness": true,
+                    "text": "1.7.1 Read Vendors"
+                },
+                "content": [
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 12.0,
+                        "boldness": false,
+                        "text": "This call returns a list of vendors (suppliers)."
+                    },
+                    {
+                        "font_name": "TimesNewRomanPS-BoldMT",
+                        "font_size": 12.0,
+                        "boldness": true,
+                        "text": "REST"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 12.0,
+                        "boldness": false,
+                        "text": "URL: /VendorMethod: Get"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPS-BoldMT",
+                        "font_size": 12.0,
+                        "boldness": true,
+                        "text": "XML Web Service"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 12.0,
+                        "boldness": false,
+                        "text": "WSDL: /SetupServices.asmx?WSDLURL: /SetupServices.asmxMethod: VendorsRead"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPS-BoldMT",
+                        "font_size": 11.999999999999943,
+                        "boldness": true,
+                        "text": "Parameters"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 12.0,
+                        "boldness": false,
+                        "text": "None"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPS-BoldMT",
+                        "font_size": 12.0,
+                        "boldness": true,
+                        "text": "Result"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 12.0,
+                        "boldness": false,
+                        "text": "An Vendors object."
+                    }
+                ]
+            },
+            {
+                "title": {
+                    "font_name": "Arial-BoldMT",
+                    "font_size": 12.0,
+                    "boldness": true,
+                    "text": "1.7.1 Read Inventory Price levels"
+                },
+                "content": [
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 12.0,
+                        "boldness": false,
+                        "text": "This call returns a list of inventory price levels"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPS-BoldMT",
+                        "font_size": 12.0,
+                        "boldness": true,
+                        "text": "REST"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 12.0,
+                        "boldness": false,
+                        "text": "URL: /Inventory/PriceLevelsMethod: Get"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPS-BoldMT",
+                        "font_size": 12.0,
+                        "boldness": true,
+                        "text": "XML Web Service"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 12.0,
+                        "boldness": false,
+                        "text": "WSDL: /SetupServices.asmx?WSDLURL: /SetupServices.asmxMethod: InventorySellPriceLevelsRead"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPS-BoldMT",
+                        "font_size": 11.999999999999943,
+                        "boldness": true,
+                        "text": "Parameters"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 12.0,
+                        "boldness": false,
+                        "text": "None"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPS-BoldMT",
+                        "font_size": 12.0,
+                        "boldness": true,
+                        "text": "Result"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 12.0,
+                        "boldness": false,
+                        "text": "A InventoryPriceLevels object."
+                    }
+                ]
+            },
+            {
+                "title": {
+                    "font_name": "Arial-BoldMT",
+                    "font_size": 12.0,
+                    "boldness": true,
+                    "text": "1.7.2 Read Inventories"
+                },
+                "content": [
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 12.0,
+                        "boldness": false,
+                        "text": "This call returns a list of inventories base on the search criteria."
+                    },
+                    {
+                        "font_name": "TimesNewRomanPS-BoldMT",
+                        "font_size": 12.0,
+                        "boldness": true,
+                        "text": "REST"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 12.0,
+                        "boldness": false,
+                        "text": "URL: /Inventory/Method: Get"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPS-BoldMT",
+                        "font_size": 12.0,
+                        "boldness": true,
+                        "text": "XML Web Service"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 12.0,
+                        "boldness": false,
+                        "text": "WSDL: /SetupServices.asmx?WSDLURL: /SetupServices.asmxMethod: InventoryMaterialsRead"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPS-BoldMT",
+                        "font_size": 11.999999999999943,
+                        "boldness": true,
+                        "text": "Parameters"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 12.0,
+                        "boldness": false,
+                        "text": "serviceCategoryID Type GUID. The service category ID for the inventory. Pass in all zero GUID to return inventory from all service categories.partNumber Type string. A partial part number to match.Use an empty string to match any part number.description Type string. A partial description to match.Use an empty string to match any description.manufacturer Type string. A partial manufacturer to match.Use an empty string to match any manufacturer.code Type string. A partial code to match. Use an empty string to match any code.size Type string. A partial size to match. Use an empty string to match any size.grid Type string. A partial grid to match. Use an empty string to match any grid.partTerminologyID Part terminology ID of an ACES PCDB part.quantity The minimum in stock quantity to return inventory item."
+                    },
+                    {
+                        "font_name": "TimesNewRomanPS-BoldMT",
+                        "font_size": 12.0,
+                        "boldness": true,
+                        "text": "Result"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 12.0,
+                        "boldness": false,
+                        "text": "An InventoryMaterials object.If part terminology ID is specified as \u201c7636\u201d or Tire in PCDB. Any size parameter will be parsed as a tire size and size with all the separators and without separators will be matched.For example, a size of 205/55R16 will match any inventory with size of 205/55R16 or2055516.For connection against a location database, the InStock field will contain the in stock quantity at the location. For connection against an enterprise database, the Availabilities collection will contain availability at the location."
+                    }
+                ]
+            },
+            {
+                "title": {
+                    "font_name": "Arial-BoldMT",
+                    "font_size": 12.0,
+                    "boldness": true,
+                    "text": "1.7.3 Read Service Package Templates"
+                },
+                "content": [
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 12.0,
+                        "boldness": false,
+                        "text": "This call returns a list of service package templates based on the search criteria."
+                    },
+                    {
+                        "font_name": "TimesNewRomanPS-BoldMT",
+                        "font_size": 12.0,
+                        "boldness": true,
+                        "text": "REST"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 12.0,
+                        "boldness": false,
+                        "text": "URL: /ServicePackageTemplate/Method: Get"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPS-BoldMT",
+                        "font_size": 12.0,
+                        "boldness": true,
+                        "text": "XML Web Service"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 12.0,
+                        "boldness": false,
+                        "text": "WSDL: /SetupServices.asmx?WSDLURL: /SetupServices.asmxMethod: ServicePackageTemplatesRead"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPS-BoldMT",
+                        "font_size": 11.999999999999943,
+                        "boldness": true,
+                        "text": "Parameters"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 12.0,
+                        "boldness": false,
+                        "text": "serviceCategoryID Type GUID. The service category ID for the inventory. Pass in all zero GUID to return inventory from all service categories.code Type string. A partial code to match. Use an empty string to match any code.title Type string. A partial title to match. Use an empty string to match any title.type Type string. The service package template type to match. The accepted types are (\u201cConcern\u201d,\u201cInspection\u201d, and \u201cService\u201d). Use an empty string to match any service package template type."
+                    },
+                    {
+                        "font_name": "TimesNewRomanPS-BoldMT",
+                        "font_size": 12.0,
+                        "boldness": true,
+                        "text": "Result"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 12.0,
+                        "boldness": false,
+                        "text": "A ServicePackages object."
+                    }
+                ]
+            },
+            {
+                "title": {
+                    "font_name": "Arial-BoldMT",
+                    "font_size": 12.0,
+                    "boldness": true,
+                    "text": "1.7.4 Read Service Package Template Detail"
+                },
+                "content": [
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 12.0,
+                        "boldness": false,
+                        "text": "This call returns the full service package template record including all service package lines and inspection lines if the service package is an inspection."
+                    },
+                    {
+                        "font_name": "TimesNewRomanPS-BoldMT",
+                        "font_size": 12.0,
+                        "boldness": true,
+                        "text": "REST"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 12.0,
+                        "boldness": false,
+                        "text": "URL: /ServicePackageTemplate/{id}Method: Get"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPS-BoldMT",
+                        "font_size": 12.0,
+                        "boldness": true,
+                        "text": "XML Web Service"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 12.0,
+                        "boldness": false,
+                        "text": "WSDL: /SetupServices.asmx?WSDLURL: /SetupServices.asmxMethod: ServicePackageTemplateReadByID"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPS-BoldMT",
+                        "font_size": 12.0,
+                        "boldness": true,
+                        "text": "Parameters"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 12.0,
+                        "boldness": false,
+                        "text": "id Type GUID. The service package template ID."
+                    },
+                    {
+                        "font_name": "TimesNewRomanPS-BoldMT",
+                        "font_size": 12.0,
+                        "boldness": true,
+                        "text": "Result"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 12.0,
+                        "boldness": false,
+                        "text": "A ServicePackage object"
+                    }
+                ]
+            }
+        ],
+        "content": []
+    },
+    {
+        "title": {
+            "font_name": "Arial-BoldMT",
+            "font_size": 14.039999999999964,
+            "boldness": true,
+            "text": "1.8 Contact Services"
+        },
+        "subtopic": [
+            {
+                "title": {
+                    "font_name": "Arial-BoldMT",
+                    "font_size": 12.0,
+                    "boldness": true,
+                    "text": "1.8.1 Read Contact"
+                },
+                "content": [
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 12.0,
+                        "boldness": false,
+                        "text": "This call returns the full detail of a single contact."
+                    },
+                    {
+                        "font_name": "TimesNewRomanPS-BoldMT",
+                        "font_size": 12.0,
+                        "boldness": true,
+                        "text": "REST"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 12.0,
+                        "boldness": false,
+                        "text": "URL: /Contact/{id}Method: Get"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPS-BoldMT",
+                        "font_size": 12.0,
+                        "boldness": true,
+                        "text": "XML Web Service"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 12.0,
+                        "boldness": false,
+                        "text": "WSDL: /ContactServices.asmx?WSDLURL: /ContactServices.asmxMethod: ContactReadByID"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPS-BoldMT",
+                        "font_size": 12.0,
+                        "boldness": true,
+                        "text": "Parameters"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 12.0,
+                        "boldness": false,
+                        "text": "id Type GUID. The contact ID."
+                    },
+                    {
+                        "font_name": "TimesNewRomanPS-BoldMT",
+                        "font_size": 12.0,
+                        "boldness": true,
+                        "text": "Result"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 12.0,
+                        "boldness": false,
+                        "text": "A Contact object."
+                    }
+                ]
+            },
+            {
+                "title": {
+                    "font_name": "Arial-BoldMT",
+                    "font_size": 12.0,
+                    "boldness": true,
+                    "text": "1.8.1 Search for Contact"
+                },
+                "content": [
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 12.0,
+                        "boldness": false,
+                        "text": "This call returns a list of contact records that matches the search string. The contact records are partial string matched by file as, company, or the full name,"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPS-BoldMT",
+                        "font_size": 12.0,
+                        "boldness": true,
+                        "text": "REST"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 12.0,
+                        "boldness": false,
+                        "text": "URL: /Contact/Search/{searchString}Method: Get"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPS-BoldMT",
+                        "font_size": 12.0,
+                        "boldness": true,
+                        "text": "XML Web Service"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 12.0,
+                        "boldness": false,
+                        "text": "WSDL: /ContactServices.asmx?WSDLURL: /ContactServices.asmxMethod: ContactSearch"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPS-BoldMT",
+                        "font_size": 12.0,
+                        "boldness": true,
+                        "text": "Parameters"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 12.0,
+                        "boldness": false,
+                        "text": "searchString The search string."
+                    },
+                    {
+                        "font_name": "TimesNewRomanPS-BoldMT",
+                        "font_size": 12.0,
+                        "boldness": true,
+                        "text": "Result"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 12.0,
+                        "boldness": false,
+                        "text": "A Contacts object collection."
+                    }
+                ]
+            },
+            {
+                "title": {
+                    "font_name": "Arial-BoldMT",
+                    "font_size": 12.0,
+                    "boldness": true,
+                    "text": "1.8.2 Update Contact"
+                },
+                "content": [
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 12.0,
+                        "boldness": false,
+                        "text": "This call updates the contact record in Protractor system. If the contact does not exist, a new contact record will be created. If the contact exists, then existing data will be overwritten."
+                    },
+                    {
+                        "font_name": "TimesNewRomanPS-BoldMT",
+                        "font_size": 12.0,
+                        "boldness": true,
+                        "text": "REST"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 12.0,
+                        "boldness": false,
+                        "text": "URL: /Contact/{id}Method: Post"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPS-BoldMT",
+                        "font_size": 12.0,
+                        "boldness": true,
+                        "text": "XML Web Service"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 12.0,
+                        "boldness": false,
+                        "text": "WSDL: /ContactServices.asmx?WSDLURL: /ContactServices.asmxMethod: ContactUpdate"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPS-BoldMT",
+                        "font_size": 12.0,
+                        "boldness": true,
+                        "text": "Parameters"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 12.0,
+                        "boldness": false,
+                        "text": "id Type GUID. The contact ID.contact Type string. Contact object serialized in the string format. For REST call, this value is passed in the request body."
+                    },
+                    {
+                        "font_name": "TimesNewRomanPS-BoldMT",
+                        "font_size": 12.0,
+                        "boldness": true,
+                        "text": "Result"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 12.0,
+                        "boldness": false,
+                        "text": "None."
+                    }
+                ]
+            },
+            {
+                "title": {
+                    "font_name": "Arial-BoldMT",
+                    "font_size": 12.0,
+                    "boldness": true,
+                    "text": "1.8.3 Read Service Item"
+                },
+                "content": [
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 12.0,
+                        "boldness": false,
+                        "text": "This call returns the full detail of a single service item. This can be a basic Service item can be of type ServiceItem or in case of a vehicle of type ServiceItemVehicle."
+                    },
+                    {
+                        "font_name": "TimesNewRomanPS-BoldMT",
+                        "font_size": 12.0,
+                        "boldness": true,
+                        "text": "REST"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 12.0,
+                        "boldness": false,
+                        "text": "URL: /ServiceItem/{id}Method: Get"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPS-BoldMT",
+                        "font_size": 12.0,
+                        "boldness": true,
+                        "text": "XML Web Service"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 12.0,
+                        "boldness": false,
+                        "text": "WSDL: /ContactServices.asmx?WSDLURL: /ContactServices.asmxMethod: ServiceItemReadByID"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPS-BoldMT",
+                        "font_size": 12.0,
+                        "boldness": true,
+                        "text": "Parameters"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 12.0,
+                        "boldness": false,
+                        "text": "id Type GUID. The service item ID."
+                    },
+                    {
+                        "font_name": "TimesNewRomanPS-BoldMT",
+                        "font_size": 12.0,
+                        "boldness": true,
+                        "text": "Result"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 12.0,
+                        "boldness": false,
+                        "text": "A ServiceItem object."
+                    }
+                ]
+            },
+            {
+                "title": {
+                    "font_name": "Arial-BoldMT",
+                    "font_size": 12.0,
+                    "boldness": true,
+                    "text": "1.8.1 Read Service Item By Owner ID"
+                },
+                "content": [
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 12.0,
+                        "boldness": false,
+                        "text": "This call returns a list of service items that\u2019s belongs to the specified contact / owner."
+                    },
+                    {
+                        "font_name": "TimesNewRomanPS-BoldMT",
+                        "font_size": 12.0,
+                        "boldness": true,
+                        "text": "REST"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 12.0,
+                        "boldness": false,
+                        "text": "URL: /ServiceItem/Search/OwnerID/{ownerId}Method: Get"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPS-BoldMT",
+                        "font_size": 12.0,
+                        "boldness": true,
+                        "text": "XML Web Service"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 12.0,
+                        "boldness": false,
+                        "text": "WSDL: /ContactServices.asmx?WSDLURL: /ContactServices.asmxMethod: ServiceItemsReadByOwnerID"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPS-BoldMT",
+                        "font_size": 11.999999999999943,
+                        "boldness": true,
+                        "text": "Parameters"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 12.0,
+                        "boldness": false,
+                        "text": "ownerId Type GUID. The owner contact ID."
+                    },
+                    {
+                        "font_name": "TimesNewRomanPS-BoldMT",
+                        "font_size": 12.0,
+                        "boldness": true,
+                        "text": "Result"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 12.0,
+                        "boldness": false,
+                        "text": "A ServiceItems object collection."
+                    }
+                ]
+            },
+            {
+                "title": {
+                    "font_name": "Arial-BoldMT",
+                    "font_size": 12.0,
+                    "boldness": true,
+                    "text": "1.8.1 Search for Service Item"
+                },
+                "content": [
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 12.0,
+                        "boldness": false,
+                        "text": "This call returns a list of service item records that matches the search string. The service item records are partial string matched by look up / plate, or the VIN."
+                    },
+                    {
+                        "font_name": "TimesNewRomanPS-BoldMT",
+                        "font_size": 12.0,
+                        "boldness": true,
+                        "text": "REST"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 12.0,
+                        "boldness": false,
+                        "text": "URL: /ServiceItem/Search/{searchString}Method: Get"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPS-BoldMT",
+                        "font_size": 12.0,
+                        "boldness": true,
+                        "text": "XML Web Service"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 12.0,
+                        "boldness": false,
+                        "text": "WSDL: /ContactServices.asmx?WSDLURL: /ContactServices.asmxMethod: ServiceItemSearch"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPS-BoldMT",
+                        "font_size": 12.0,
+                        "boldness": true,
+                        "text": "Parameters"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 12.0,
+                        "boldness": false,
+                        "text": "searchString The search string."
+                    },
+                    {
+                        "font_name": "TimesNewRomanPS-BoldMT",
+                        "font_size": 12.0,
+                        "boldness": true,
+                        "text": "Result"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 12.0,
+                        "boldness": false,
+                        "text": "A ServiceItems object collection."
+                    }
+                ]
+            },
+            {
+                "title": {
+                    "font_name": "Arial-BoldMT",
+                    "font_size": 12.0,
+                    "boldness": true,
+                    "text": "1.8.2 Update Service Item"
+                },
+                "content": [
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 12.0,
+                        "boldness": false,
+                        "text": "This call updates the service item record in Protractor system. If the contact does not exist, a new service item record will be created. If the service item exists, then existing data will be overwritten. Service item can be of type ServiceItem or in case of a vehicle of typeServiceItemVehicle."
+                    },
+                    {
+                        "font_name": "TimesNewRomanPS-BoldMT",
+                        "font_size": 12.0,
+                        "boldness": true,
+                        "text": "REST"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 12.0,
+                        "boldness": false,
+                        "text": "URL: /ServiceItem/{id}Method: Post"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPS-BoldMT",
+                        "font_size": 12.0,
+                        "boldness": true,
+                        "text": "XML Web Service"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 12.0,
+                        "boldness": false,
+                        "text": "WSDL: /ContactServices.asmx?WSDL"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 11.999999999999943,
+                        "boldness": false,
+                        "text": "URL: /ContactServices.asmx"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 12.0,
+                        "boldness": false,
+                        "text": "Method: ServiceItemUpdate"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPS-BoldMT",
+                        "font_size": 12.0,
+                        "boldness": true,
+                        "text": "Parameters"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 12.0,
+                        "boldness": false,
+                        "text": "id Type GUID. The service item ID.serviceItem Type string. ServiceItem object serialized in the string format. For REST call, this value is passed in the request body."
+                    },
+                    {
+                        "font_name": "TimesNewRomanPS-BoldMT",
+                        "font_size": 12.0,
+                        "boldness": true,
+                        "text": "Result"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 12.0,
+                        "boldness": false,
+                        "text": "None."
+                    }
+                ]
+            }
+        ],
+        "content": []
+    },
+    {
+        "title": {
+            "font_name": "Arial-BoldMT",
+            "font_size": 14.039999999999964,
+            "boldness": true,
+            "text": "1.9 Work Order Services"
+        },
+        "subtopic": [
+            {
+                "title": {
+                    "font_name": "Arial-BoldMT",
+                    "font_size": 12.0,
+                    "boldness": true,
+                    "text": "1.9.1 Read Active Work Orders"
+                },
+                "content": [
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 12.0,
+                        "boldness": false,
+                        "text": "This call returns a list of active work orders and or appointments in the shop. This is a list of work orders that are active as the time of the call. On hold work orders, work orders that are posted as invoice, or deleted will not be in the list.The work order returned contains only the summary level of information that\u2019s suitable for displaying in a list. It does not contain service package or line level details.The start date and end date both include time components. Start date is inclusive and end date is exclusive. To get data for the entire day, the start date should be 00:00:00 for the day and end date should be 00:00:00 for the next day."
+                    },
+                    {
+                        "font_name": "TimesNewRomanPS-BoldMT",
+                        "font_size": 12.0,
+                        "boldness": true,
+                        "text": "REST"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 12.0,
+                        "boldness": false,
+                        "text": "URL: /WorkOrder/Method: Get"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPS-BoldMT",
+                        "font_size": 12.0,
+                        "boldness": true,
+                        "text": "XML Web Service"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 12.0,
+                        "boldness": false,
+                        "text": "WSDL: /WorkOrderServices.asmx?WSDLURL: /WorkOrderServices.asmxMethod: WorkOrdersReadActive"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPS-BoldMT",
+                        "font_size": 12.0,
+                        "boldness": true,
+                        "text": "Parameters"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 12.0,
+                        "boldness": false,
+                        "text": "startDate Type date / time. The start date / time to return appointments / work orders. Leave this parameter blank or set to a value of 0001-01-01 returns only today\u2019s work.endDate Type date / time. The end date / time to return appointments / work orders. Leave this parameter blank or set to a value of 0001-01-01 returns only today\u2019s work.readInProgress Type Boolean. True if the call should return all in progress work orders. False if only scheduled work order / appointments should be returned."
+                    },
+                    {
+                        "font_name": "TimesNewRomanPS-BoldMT",
+                        "font_size": 11.999999999999986,
+                        "boldness": true,
+                        "text": "Result"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 12.0,
+                        "boldness": false,
+                        "text": "A WorkOrders object."
+                    }
+                ]
+            },
+            {
+                "title": {
+                    "font_name": "Arial-BoldMT",
+                    "font_size": 12.0,
+                    "boldness": true,
+                    "text": "1.9.2 Read Work Order Details"
+                },
+                "content": [
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 12.0,
+                        "boldness": false,
+                        "text": "This call returns the full detail of a single work order. This includes service packages and line level detail of a work order."
+                    },
+                    {
+                        "font_name": "TimesNewRomanPS-BoldMT",
+                        "font_size": 12.0,
+                        "boldness": true,
+                        "text": "REST"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 12.0,
+                        "boldness": false,
+                        "text": "URL: /WorkOrder/{workOrderID}Method: Get"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPS-BoldMT",
+                        "font_size": 12.0,
+                        "boldness": true,
+                        "text": "XML Web Service"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 12.0,
+                        "boldness": false,
+                        "text": "WSDL: /WorkOrderServices.asmx?WSDLURL: /WorkOrderServices.asmxMethod: WorkOrderReadByID"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPS-BoldMT",
+                        "font_size": 12.0,
+                        "boldness": true,
+                        "text": "Parameters"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 12.0,
+                        "boldness": false,
+                        "text": "workOrderID Type GUID. The work order ID."
+                    },
+                    {
+                        "font_name": "TimesNewRomanPS-BoldMT",
+                        "font_size": 12.0,
+                        "boldness": true,
+                        "text": "Result"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 12.0,
+                        "boldness": false,
+                        "text": "A WorkOrder object."
+                    }
+                ]
+            },
+            {
+                "title": {
+                    "font_name": "Arial-BoldMT",
+                    "font_size": 12.0,
+                    "boldness": true,
+                    "text": "1.9.3 Update Work Order"
+                },
+                "content": [
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 12.0,
+                        "boldness": false,
+                        "text": "Create or update a work order. If the work order exists by ID then the work order will be updated. Otherwise a new work order will be created. New work order should have work order number set to 0. You can read the actual work order number from the reply.Work order with type \u201cAppointment\u201d or \u201cEstimate\u201d can have service packages and service package lines freely added, updated, or deleted.Work order with type \u201cWorkOrder\u201d can have service packages and service package lines added. Service package line\u2019s service advisor and technician, rank, can be updated.To update an existing service package\u2019s title, description, or URL for inspection, the API key needs to have an additional parameter UpdateWorkOrderPackage set to \u201cYes\u201d inside the location\u2019s web service API setup.To update service package line\u2019s description, quantity, price, or material line\u2019s line code, part number, manufacturer, part terminology, the API key needs to have an additional parameterUpdateWorkOrderLine set to \u201cYes\u201d inside the location\u2019s web service API setup.We do not recommend updating service packages or service package lines from the web serviceAPI as it might have unintended consequences when modification call is made via the API while the user is actively editing the work order.You cannot remove service package or service package line."
+                    },
+                    {
+                        "font_name": "TimesNewRomanPS-BoldMT",
+                        "font_size": 12.0,
+                        "boldness": true,
+                        "text": "REST"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 12.0,
+                        "boldness": false,
+                        "text": "URL: /WorkOrder/{workOrderID}Method: Post"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPS-BoldMT",
+                        "font_size": 12.0,
+                        "boldness": true,
+                        "text": "XML Web Service"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 12.0,
+                        "boldness": false,
+                        "text": "WSDL: /WorkOrderServices.asmx?WSDL"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 12.000000000000028,
+                        "boldness": false,
+                        "text": "URL: /WorkOrderServices.asmx"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 12.0,
+                        "boldness": false,
+                        "text": "Method: WorkOrderUpdate"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPS-BoldMT",
+                        "font_size": 12.0,
+                        "boldness": true,
+                        "text": "Parameters"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 12.0,
+                        "boldness": false,
+                        "text": "workOrderID Type GUID. The work order ID.workOrder Type string. WorkOrder object serialized in the string format. For REST call, this value is passed in the request body."
+                    },
+                    {
+                        "font_name": "TimesNewRomanPS-BoldMT",
+                        "font_size": 12.0,
+                        "boldness": true,
+                        "text": "Result"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 12.0,
+                        "boldness": false,
+                        "text": "A WorkOrder object that contains the up to date value."
+                    }
+                ]
+            },
+            {
+                "title": {
+                    "font_name": "Arial-BoldMT",
+                    "font_size": 12.0,
+                    "boldness": true,
+                    "text": "1.9.4 Update Inspection Results"
+                },
+                "content": [
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 12.0,
+                        "boldness": false,
+                        "text": "Use to insert or update existing inspection result. The service packages can contain one or more existing service package data or new service package data. Any service package and/or inspection line that exists by ID will be updated. Any service package and/or inspection line that does not exist will be created. Only service package with Chapter set to \u201cInspection\u201d will be processed. Only service package general information and inspection lines will be processed.Service package lines will be ignored."
+                    },
+                    {
+                        "font_name": "TimesNewRomanPS-BoldMT",
+                        "font_size": 12.0,
+                        "boldness": true,
+                        "text": "REST"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 12.0,
+                        "boldness": false,
+                        "text": "URL: /WorkOrder/{workOrderID}/InspectionMethod: Post"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPS-BoldMT",
+                        "font_size": 11.999999999999943,
+                        "boldness": true,
+                        "text": "XML Web Service"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 12.0,
+                        "boldness": false,
+                        "text": "WSDL: /WorkOrderServices.asmx?WSDLURL: /WorkOrderServices.asmxMethod: InspectionResultUpdate"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPS-BoldMT",
+                        "font_size": 12.0,
+                        "boldness": true,
+                        "text": "Parameters"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 12.0,
+                        "boldness": false,
+                        "text": "workOrderID Type GUID. The work order ID that the inspection belongs to.inspections Type string. ServicePackages object serialized in the string format. For REST call, this value is passed in the request body."
+                    }
+                ]
+            },
+            {
+                "title": {
+                    "font_name": "Arial-BoldMT",
+                    "font_size": 12.0,
+                    "boldness": true,
+                    "text": "1.9.5 Search for Estimate"
+                },
+                "content": [
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 12.0,
+                        "boldness": false,
+                        "text": "This call returns a list of estimates that matches the search criteria.The estimate returned contains only the summary level of information that\u2019s suitable for displaying in a list. It does not contain service package or line level details.The start date and end date both include time components. Start date is inclusive and end date is exclusive. To get data for the entire day, the start date should be 00:00:00 for the day and end date should be 00:00:00 for the next day."
+                    },
+                    {
+                        "font_name": "TimesNewRomanPS-BoldMT",
+                        "font_size": 12.0,
+                        "boldness": true,
+                        "text": "REST"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 12.0,
+                        "boldness": false,
+                        "text": "URL: /Estimate/{searchString}"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 11.999999999999943,
+                        "boldness": false,
+                        "text": "Method: Get"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPS-BoldMT",
+                        "font_size": 12.0,
+                        "boldness": true,
+                        "text": "Parameters"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 12.0,
+                        "boldness": false,
+                        "text": "startDate Type date / time. The start date / time to search for estimates. The default value is today.endDate Type date / time. The end date / time to search for estimates. The default value is today.searchString The search string."
+                    },
+                    {
+                        "font_name": "TimesNewRomanPS-BoldMT",
+                        "font_size": 12.0,
+                        "boldness": true,
+                        "text": "Result"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 12.0,
+                        "boldness": false,
+                        "text": "A WorkOrders object."
+                    }
+                ]
+            },
+            {
+                "title": {
+                    "font_name": "Arial-BoldMT",
+                    "font_size": 12.0,
+                    "boldness": true,
+                    "text": "1.9.6 Read Invoice"
+                },
+                "content": [
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 12.0,
+                        "boldness": false,
+                        "text": "This call returns the invoice in the database within the specified ID. This can be used to retrieve the invoice of a known work order, appointment, or estimate since invoice will have the sameID as the work order, appointment, or estimate.The invoice returned contains full service package and line level details."
+                    },
+                    {
+                        "font_name": "TimesNewRomanPS-BoldMT",
+                        "font_size": 12.0,
+                        "boldness": true,
+                        "text": "REST"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 12.0,
+                        "boldness": false,
+                        "text": "URL: /Invoice/{invoiceID}Method: Get"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPS-BoldMT",
+                        "font_size": 12.0,
+                        "boldness": true,
+                        "text": "XML Web Service"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 11.999999999999943,
+                        "boldness": false,
+                        "text": "WSDL: /WorkOrderServices.asmx?WSDL"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 12.0,
+                        "boldness": false,
+                        "text": "URL: /WorkOrderServices.asmxMethod: InvoiceReadByID"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPS-BoldMT",
+                        "font_size": 12.0,
+                        "boldness": true,
+                        "text": "Parameters"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 12.0,
+                        "boldness": false,
+                        "text": "invoiceID Type GUID. The invoice ID."
+                    },
+                    {
+                        "font_name": "TimesNewRomanPS-BoldMT",
+                        "font_size": 12.0,
+                        "boldness": true,
+                        "text": "Result"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 12.0,
+                        "boldness": false,
+                        "text": "A WorkOrders object."
+                    }
+                ]
+            },
+            {
+                "title": {
+                    "font_name": "Arial-BoldMT",
+                    "font_size": 12.0,
+                    "boldness": true,
+                    "text": "1.9.7 Read Invoices"
+                },
+                "content": [
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 12.0,
+                        "boldness": false,
+                        "text": "This call returns a list of invoices in the database within the specified start / end date.The invoices returned contains full service package and line level details.The start date and end date both include time components. Start date is inclusive and end date is exclusive. To get data for the entire day, the start date should be 00:00:00 for the day and end date should be 00:00:00 for the next day."
+                    },
+                    {
+                        "font_name": "TimesNewRomanPS-BoldMT",
+                        "font_size": 12.0,
+                        "boldness": true,
+                        "text": "REST"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 12.0,
+                        "boldness": false,
+                        "text": "URL: /Invoice/Method: Get"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPS-BoldMT",
+                        "font_size": 12.0,
+                        "boldness": true,
+                        "text": "XML Web Service"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 12.0,
+                        "boldness": false,
+                        "text": "WSDL: /WorkOrderServices.asmx?WSDLURL: /WorkOrderServices.asmxMethod: InvoicesRead"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPS-BoldMT",
+                        "font_size": 12.0,
+                        "boldness": true,
+                        "text": "Parameters"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 12.0,
+                        "boldness": false,
+                        "text": "startDate Type date / time. The start date / time to return invoices.endDate Type date / time. The end date / time to return invoices."
+                    },
+                    {
+                        "font_name": "TimesNewRomanPS-BoldMT",
+                        "font_size": 12.0,
+                        "boldness": true,
+                        "text": "Result"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 12.0,
+                        "boldness": false,
+                        "text": "A WorkOrders object."
+                    }
+                ]
+            },
+            {
+                "title": {
+                    "font_name": "Arial-BoldMT",
+                    "font_size": 12.0,
+                    "boldness": true,
+                    "text": "1.9.8 Read Invoices for a Contact"
+                },
+                "content": [
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 12.0,
+                        "boldness": false,
+                        "text": "This call returns a list of invoices in the database within the specified start / end date for the specified contact.The invoices returned does not contain full service package or line level details. You can use the Read Invoice call to get full details.The start date and end date both include time components. Start date is inclusive and end date is exclusive. To get data for the entire day, the start date should be 00:00:00 for the day and end date should be 00:00:00 for the next day."
+                    },
+                    {
+                        "font_name": "TimesNewRomanPS-BoldMT",
+                        "font_size": 12.0,
+                        "boldness": true,
+                        "text": "REST"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 11.999999999999943,
+                        "boldness": false,
+                        "text": "URL: /Contact/{id}/Invoice"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 12.0,
+                        "boldness": false,
+                        "text": "Method: Get"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPS-BoldMT",
+                        "font_size": 12.0,
+                        "boldness": true,
+                        "text": "Parameters"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 12.0,
+                        "boldness": false,
+                        "text": "startDate Type date / time. The start date / time to return invoices.endDate Type date / time. The end date / time to return invoices."
+                    },
+                    {
+                        "font_name": "TimesNewRomanPS-BoldMT",
+                        "font_size": 12.0,
+                        "boldness": true,
+                        "text": "Result"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 12.0,
+                        "boldness": false,
+                        "text": "A WorkOrders object."
+                    }
+                ]
+            },
+            {
+                "title": {
+                    "font_name": "Arial-BoldMT",
+                    "font_size": 12.0,
+                    "boldness": true,
+                    "text": "1.9.9 Read Invoices for a Service Item"
+                },
+                "content": [
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 12.0,
+                        "boldness": false,
+                        "text": "This call returns a list of invoices in the database within the specified start / end date for the specified service item.The invoices returned does not contain full service package or line level details. You can use the Read Invoice call to get full details.The start date and end date both include time components. Start date is inclusive and end date is exclusive. To get data for the entire day, the start date should be 00:00:00 for the day and end date should be 00:00:00 for the next day."
+                    },
+                    {
+                        "font_name": "TimesNewRomanPS-BoldMT",
+                        "font_size": 12.0,
+                        "boldness": true,
+                        "text": "REST"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 11.999999999999943,
+                        "boldness": false,
+                        "text": "URL: /ServiceItem/{id}/Invoice"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 12.0,
+                        "boldness": false,
+                        "text": "Method: Get"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPS-BoldMT",
+                        "font_size": 12.0,
+                        "boldness": true,
+                        "text": "Parameters"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 12.0,
+                        "boldness": false,
+                        "text": "startDate Type date / time. The start date / time to return invoices.endDate Type date / time. The end date / time to return invoices."
+                    },
+                    {
+                        "font_name": "TimesNewRomanPS-BoldMT",
+                        "font_size": 12.0,
+                        "boldness": true,
+                        "text": "Result"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 12.0,
+                        "boldness": false,
+                        "text": "A WorkOrders object."
+                    }
+                ]
+            }
+        ],
+        "content": []
+    },
+    {
+        "title": {
+            "font_name": "Arial-BoldMT",
+            "font_size": 14.039999999999964,
+            "boldness": true,
+            "text": "1.10 Reporting Services"
+        },
+        "subtopic": [
+            {
+                "title": {
+                    "font_name": "Arial-BoldMT",
+                    "font_size": 12.0,
+                    "boldness": true,
+                    "text": "1.10.1 Read Sales Summaries"
+                },
+                "content": [
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 12.0,
+                        "boldness": false,
+                        "text": "This call returns a list of labor, parts, sublet sales total and cost broke down by service categories.The start date and end date both include time components. Start date is inclusive and end date is exclusive. To get data for the entire day, the start date should be 00:00:00 for the day and end date should be 00:00:00 for the next day."
+                    },
+                    {
+                        "font_name": "TimesNewRomanPS-BoldMT",
+                        "font_size": 12.0,
+                        "boldness": true,
+                        "text": "REST"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 12.0,
+                        "boldness": false,
+                        "text": "URL: /Reporting/SalesSummaries/Method: Get"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPS-BoldMT",
+                        "font_size": 12.0,
+                        "boldness": true,
+                        "text": "Parameters"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 12.0,
+                        "boldness": false,
+                        "text": "startDate Type date / time. The start date / time to return account values. This value is only used for income / expense account for building the income statement. The asset, liability, equity account is not affected by this parameter.endDate Type date / time. The end date / time to return account values."
+                    },
+                    {
+                        "font_name": "TimesNewRomanPS-BoldMT",
+                        "font_size": 12.0,
+                        "boldness": true,
+                        "text": "Result"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 12.0,
+                        "boldness": false,
+                        "text": "A SalesSummaries object."
+                    }
+                ]
+            },
+            {
+                "title": {
+                    "font_name": "Arial-BoldMT",
+                    "font_size": 12.0,
+                    "boldness": true,
+                    "text": "1.10.2 Read General Ledger Account Values"
+                },
+                "content": [
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 12.0,
+                        "boldness": false,
+                        "text": "This call returns a list of general ledger accounts and their account values for the specified date or date ranges. For asset, liability, and equity accounts, only the end date is used. The result is the balance sheet on the end date. For income, expense accounts, both start and end date is used. The result is the income statement between the start and end date.The start date and end date both include time components. Start date is inclusive and end date is exclusive. To get data for the entire day, the start date should be 00:00:00 for the day and end date should be 00:00:00 for the next day."
+                    },
+                    {
+                        "font_name": "TimesNewRomanPS-BoldMT",
+                        "font_size": 12.0,
+                        "boldness": true,
+                        "text": "REST"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 12.0,
+                        "boldness": false,
+                        "text": "URL: /Reporting/LedgerAccountValues/"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 11.999999999999943,
+                        "boldness": false,
+                        "text": "Method: Get"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPS-BoldMT",
+                        "font_size": 12.0,
+                        "boldness": true,
+                        "text": "Parameters"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 12.0,
+                        "boldness": false,
+                        "text": "startDate Type date / time. The start date / time to return account values. If start date is not specified, then all transactions up to end date is included.endDate Type date / time. The end date / time to return account values. If end date is not specified, then all transactions on or after start date is included.type Type string. The accepted types are(\u201cBalanceSheet\u201d, \u201cIncomeStatement\u201d). Use an empty string to get balance sheet and income in a single call."
+                    },
+                    {
+                        "font_name": "TimesNewRomanPS-BoldMT",
+                        "font_size": 12.0,
+                        "boldness": true,
+                        "text": "Result"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 12.0,
+                        "boldness": false,
+                        "text": "A LedgerAccounts object."
+                    }
+                ]
+            }
+        ],
+        "content": []
+    },
+    {
+        "title": {
+            "font_name": "Arial-BoldMT",
+            "font_size": 14.039999999999964,
+            "boldness": true,
+            "text": "1.11 General Ledger Services"
+        },
+        "subtopic": [
+            {
+                "title": {
+                    "font_name": "Arial-BoldMT",
+                    "font_size": 12.0,
+                    "boldness": true,
+                    "text": "1.11.1 Read General Ledger Accounts"
+                },
+                "content": [
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 12.0,
+                        "boldness": false,
+                        "text": "This call returns a list of general ledger accounts."
+                    },
+                    {
+                        "font_name": "TimesNewRomanPS-BoldMT",
+                        "font_size": 12.0,
+                        "boldness": true,
+                        "text": "REST"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 12.0,
+                        "boldness": false,
+                        "text": "URL: /LedgerAccount/Method: Get"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPS-BoldMT",
+                        "font_size": 12.0,
+                        "boldness": true,
+                        "text": "XML Web Service"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 12.0,
+                        "boldness": false,
+                        "text": "WSDL: /LedgerServices.asmx?WSDLURL: /LedgerServices.asmxMethod: LedgerAccountsRead"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPS-BoldMT",
+                        "font_size": 12.0,
+                        "boldness": true,
+                        "text": "Parameters"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 12.0,
+                        "boldness": false,
+                        "text": "None"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPS-BoldMT",
+                        "font_size": 12.0,
+                        "boldness": true,
+                        "text": "Result"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 12.0,
+                        "boldness": false,
+                        "text": "A LedgerAccounts object."
+                    }
+                ]
+            },
+            {
+                "title": {
+                    "font_name": "Arial-BoldMT",
+                    "font_size": 12.0,
+                    "boldness": true,
+                    "text": "1.11.2 Read General Ledger Transactions"
+                },
+                "content": [
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 12.0,
+                        "boldness": false,
+                        "text": "This call returns a list of general ledger transaction that falls within the specified date range.."
+                    },
+                    {
+                        "font_name": "TimesNewRomanPS-BoldMT",
+                        "font_size": 12.0,
+                        "boldness": true,
+                        "text": "REST"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 12.0,
+                        "boldness": false,
+                        "text": "URL: /LedgerAccountTransactions/Method: Get"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPS-BoldMT",
+                        "font_size": 12.0,
+                        "boldness": true,
+                        "text": "XML Web Service"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 12.0,
+                        "boldness": false,
+                        "text": "WSDL: /LedgerServices.asmx?WSDLURL: /LedgerServices.asmxMethod: LedgerAccountTransactionsRead"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPS-BoldMT",
+                        "font_size": 11.999999999999943,
+                        "boldness": true,
+                        "text": "Parameters"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 12.0,
+                        "boldness": false,
+                        "text": "startDate Type date / time. The start date / time to return ledger account transactions.endDate Type date / time. The end date / time to return ledger account transactions."
+                    },
+                    {
+                        "font_name": "TimesNewRomanPS-BoldMT",
+                        "font_size": 12.0,
+                        "boldness": true,
+                        "text": "Result"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 12.0,
+                        "boldness": false,
+                        "text": "A LedgerAccountTransactions object."
+                    }
+                ]
+            },
+            {
+                "title": {
+                    "font_name": "Arial-BoldMT",
+                    "font_size": 12.0,
+                    "boldness": true,
+                    "text": "1.11.3 Read General Ledger Transaction"
+                },
+                "content": [
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 12.0,
+                        "boldness": false,
+                        "text": "This call returns the full detail of a single general ledger transaction."
+                    },
+                    {
+                        "font_name": "TimesNewRomanPS-BoldMT",
+                        "font_size": 12.0,
+                        "boldness": true,
+                        "text": "REST"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 12.0,
+                        "boldness": false,
+                        "text": "URL: /LedgerAccountTransaction/{transactionID}Method: Get"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPS-BoldMT",
+                        "font_size": 12.0,
+                        "boldness": true,
+                        "text": "XML Web Service"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 12.0,
+                        "boldness": false,
+                        "text": "WSDL: /LedgerServices.asmx?WSDLURL: /LedgerServices.asmxMethod: LedgerAccountTransactionReadByID"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPS-BoldMT",
+                        "font_size": 11.999999999999943,
+                        "boldness": true,
+                        "text": "Parameters"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 12.0,
+                        "boldness": false,
+                        "text": "transactionID Type GUID. The ledger transaction ID."
+                    },
+                    {
+                        "font_name": "TimesNewRomanPS-BoldMT",
+                        "font_size": 12.0,
+                        "boldness": true,
+                        "text": "Result"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 12.0,
+                        "boldness": false,
+                        "text": "A LedgerAccountTransaction object."
+                    }
+                ]
+            },
+            {
+                "title": {
+                    "font_name": "Arial-BoldMT",
+                    "font_size": 12.0,
+                    "boldness": true,
+                    "text": "1.11.4 Create General Ledger Transaction"
+                },
+                "content": [
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 12.0,
+                        "boldness": false,
+                        "text": "Creates a general ledger transaction. If the general ledger transaction exists by ID then an error will be returned. Otherwise a new general ledger transaction will be created. Each ledger transaction line (LedgerTransactionItem) should also have their own unique GUID ID assigned. If an existing line has the same ID, an error will also be returned. If theLedgerTransaction.ID or LedgerTransactionItem.ID is blank GUID, a new GUID will be assigned by the system and the actual value will be returned."
+                    },
+                    {
+                        "font_name": "TimesNewRomanPS-BoldMT",
+                        "font_size": 12.0,
+                        "boldness": true,
+                        "text": "REST"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 12.0,
+                        "boldness": false,
+                        "text": "URL: /LedgerAccountTransaction/{transactionID}Method: Post"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPS-BoldMT",
+                        "font_size": 11.999999999999943,
+                        "boldness": true,
+                        "text": "XML Web Service"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 12.0,
+                        "boldness": false,
+                        "text": "WSDL: /LedgerServices.asmx?WSDLURL: /LedgerServices.asmxMethod: LedgerAccountTransactionUpdate"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPS-BoldMT",
+                        "font_size": 12.0,
+                        "boldness": true,
+                        "text": "Parameters"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 12.0,
+                        "boldness": false,
+                        "text": "transactionID Type GUID. The ledger transaction ID.Transaction Type string. LedgerAccountTransaction object serialized in the string format. For REST call, this value is passed in the request body."
+                    },
+                    {
+                        "font_name": "TimesNewRomanPS-BoldMT",
+                        "font_size": 12.0,
+                        "boldness": true,
+                        "text": "Result"
+                    },
+                    {
+                        "font_name": "TimesNewRomanPSMT",
+                        "font_size": 12.0,
+                        "boldness": false,
+                        "text": "A LedgerAccountTransaction object that contains the up to date value."
+                    }
+                ]
+            }
+        ],
+        "content": []
+    }
+]
